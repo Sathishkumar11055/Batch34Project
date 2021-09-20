@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Batch34_Day4
+namespace Batch34_Day5
 {
-    class ProjectPuzzal
+    class ProjectPuzz
     {
         static void inputArray(int[] a, int n)
         {
             int l = a.Length;
             int q = l - n;
-
             for (int i = 0; i < l; i++)
             {
                 a[i] = 0;
@@ -24,179 +23,63 @@ namespace Batch34_Day4
         {
             Console.WriteLine();
             int l = a.Length;
-            int count = 0;
+
             for (int i = 0; i < l; i++)
             {
-                Console.Write(a[i]);
-                count++;
-                if (count % n == 0)
+                if (i % n == 0)
                     Console.WriteLine();
+                Console.Write(a[i]);
             }
         }
 
-        static int upSide(int[] a, int n, int d, int f, out int c)
+        static void upSide(int[] a, int n, ref int currpos)
         {
-            int l = a.Length;
-            
-            int u = 0;
-            Console.WriteLine(f);
-            if (d == 0)
-            {
-                int q = l - n;
 
-                if (l >= 0 && l <= n - 1)
-                {
-                    Console.WriteLine("You can not go up side");
-                }
-                else
-                {
-                    a[q] = 0;
-                    a[q - n] = 1;
-                    u = q - n;
-                    d++;
-                    Console.WriteLine(u);
-                }
+            if (currpos >= n)
+            {
+                a[currpos] = 0;
+                currpos = currpos - n;
+                a[currpos] = 1;
             }
             else
-            {
-                if (l >= 0 && l <= n - 1)
-                {
-                    Console.WriteLine("You can not go up side");
-                }
-                else
-                {
-                    a[f] = 0;
-                    a[f - n] = 1;
-                    u = f - n;
-                    d++;
-                }
-            }
-            c = u;
-            return d;
+                Console.WriteLine("you cannot perform upside function");
         }
 
-        static int downSide(int[] a, int n, int d, int f, out int c)
+        static void downSide(int[] a, int n, ref int currpos)
         {
-            Console.WriteLine("hi");
-            int l = a.Length;
-            int u = 0;
-            int g = l;
 
-            if (d == 0)
+            if (currpos < a.Length-n)
             {
-                int q = l - n;
-
-                if (f >= g - n && f <= l)
-                {
-                    Console.WriteLine("You can not go down side");
-                }
-                else
-                {
-                    a[q] = 0;
-                    a[q + n] = 1;
-                    u = q + n;
-                    d++;
-                }
+                a[currpos] = 0;
+                currpos = currpos + n;
+                a[currpos] = 1;
             }
             else
-            {
-                Console.WriteLine(f);
-                if (f>=g-n && f<= l )
-                {
-                    Console.WriteLine("You can not go down side");
-                }
-                else
-                {
-                    Console.WriteLine("Hello");
-                    a[f] = 0;
-                    a[f + n] = 1;
-                    u = f + n;
-                    d++;
-                }
-            }
-            c = u;
-            return d;
+                Console.WriteLine("you cannot perform downside function");
         }
 
-        static int rigthSide(int[] a, int n, int d, int f, out int c)
+        static void rightSide(int[] a, int n, ref int currpos)
         {
-            int l = a.Length;
-            int u = 0;
-            int g = l;
-            Console.WriteLine(f);
-            if (d == 0)
+            if (currpos%n != n-1)
             {
-                int q = l - n;
-
-                if (f >= g - n && f <= l)
-                {
-                    Console.WriteLine("You can not go right side");
-                }
-                else
-                {
-                    a[q] = 0;
-                    a[q + 1] = 1;
-                    u = q + 1;
-                    d++;
-                }
+                a[currpos] = 0;
+                currpos = currpos + 1;
+                a[currpos] = 1;
             }
             else
-            {
-                Console.WriteLine(f);
-                if (f >= g - n && f <= l)
-                {
-                    Console.WriteLine("You can not go right side");
-                }
-                else
-                {
-                    a[f] = 0;
-                    a[f + 1] = 1;
-                    u = f + 1;
-                    d++;
-                }
-            }
-            c = u;
-            return d;
+                Console.WriteLine("you cannot perform rigthside function");
         }
 
-        static int leftSide(int[] a, int n, int d, int f, out int c)
+        static void leftSide(int[] a, int n, ref int currpos)
         {
-            int l = a.Length;
-            int u = 0;
-            int g = l;
-            if (d == 0)
+            if (currpos % n != 0)
             {
-                int q = l - n;
-
-                if (f >= g - n && f <= l)
-                {
-                    Console.WriteLine("You can not go right side");
-                }
-                else
-                {
-                    a[q] = 0;
-                    a[q - 1] = 1;
-                    u = q - 1;
-                    d++;
-                }
+                a[currpos] = 0;
+                currpos = currpos - 1;
+                a[currpos] = 1;
             }
             else
-            {
-                Console.WriteLine(f);
-                if (f >= g - n && f <= l)
-                {
-                    Console.WriteLine("You can not go left side");
-                }
-                else
-                {
-                    a[f] = 0;
-                    a[f - 1] = 1;
-                    u = f - 1;
-                    d++;
-                }
-            }
-            c = u;
-            return d;
+                Console.WriteLine("you cannot perform leftside function");
         }
 
         static void Main(string[] args)
@@ -205,44 +88,50 @@ namespace Batch34_Day4
             Console.WriteLine("Enter number of elements");
             n = Convert.ToInt32(Console.ReadLine());
 
+
+
             int q = n * n;
+
             int[] a = new int[q];
 
             inputArray(a, n);
             displayArray(a, n);
 
+
+
             int b = 0;
-            int c = 0;
-            int d = 0;
-            int f = 0;
+            int currpos = n * n - n;
+            a[currpos] = 1;
 
             do
             {
+
                 Console.WriteLine("\nEnter your option \n2.UP \n4.DOWN \n6.LEFT \n8.Right \n10.EXIT");
                 b = Convert.ToInt32(Console.ReadLine());
-
                 if (b == 2)
-                {   
-                    f = c;
-                    d = Convert.ToInt32(upSide(a, n, d, f, out c));
+                {
+                    upSide(a, n, ref currpos);
+
                     displayArray(a, n);
                 }
+
                 else if (b == 4)
                 {
-                    f = c;
-                    d = Convert.ToInt32(downSide(a, n, d, f, out c));
+                    downSide(a, n, ref currpos);
+
                     displayArray(a, n);
                 }
+
                 else if (b == 6)
                 {
-                    f = c;
-                    d = Convert.ToInt32(leftSide(a, n, d, f, out c));
+                    leftSide(a, n, ref currpos);
+
                     displayArray(a, n);
                 }
                 else if (b == 8)
                 {
-                    f = c;
-                    d = Convert.ToInt32(rigthSide(a, n, d, f, out c));
+                    rightSide(a, n, ref currpos);
+
                     displayArray(a, n);
                 }
                 else if (b == 10)
@@ -254,6 +143,7 @@ namespace Batch34_Day4
                     Console.WriteLine("Put a Valid Option");
                 }
             } while (b != 0);
+            Console.Read();
         }
     }
 }
